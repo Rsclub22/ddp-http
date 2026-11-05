@@ -18,3 +18,10 @@ void Http_Zeitlimit(const int *sock, ddpint sekunden) {
 	setsockopt(sock[0], SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof tv);
 	setsockopt(sock[0], SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof tv);
 }
+
+/* SO_REUSEADDR: Neustart direkt nach einer bedienten Verbindung (TIME_WAIT) darf nicht an bind scheitern.
+   Aufrufen, bevor der Socket gebunden wird. */
+void Http_Adresse_Wiederverwenden(const int *sock) {
+	int an = 1;
+	setsockopt(sock[0], SOL_SOCKET, SO_REUSEADDR, &an, sizeof an);
+}

@@ -8,6 +8,7 @@ Binde "lib/http/http" ein.
 
 Bereite den HTTP-Dienst vor.
 Der Socket sock ist ein TCP Socket.
+Erlaube die Wiederverwendung der Adresse von sock.
 Setze sock auf "0.0.0.0" 8080.
 Lass sock auf maximal 16 Verbindungen warten.
 Solange wahr, mache:
@@ -20,7 +21,7 @@ Solange wahr, mache:
 
 Hinweise:
 - Die DDP-Laufzeit braucht die Locale `de_DE.UTF-8` (sonst sind Nicht-ASCII-Zeichen kaputt).
-- `netz.c` ergänzt, was `Duden/Netzwerk` in v1.0.0 fehlt: Socket-Zeitlimit (`SO_RCVTIMEO`/`SO_SNDTIMEO`), `SIGPIPE` ignorieren, zeilengepufferte Ausgabe.
+- `netz.c` ergänzt, was `Duden/Netzwerk` in v1.0.0 fehlt: Socket-Zeitlimit (`SO_RCVTIMEO`/`SO_SNDTIMEO`), `SIGPIPE` ignorieren, zeilengepufferte Ausgabe, `SO_REUSEADDR` (`Erlaube die Wiederverwendung der Adresse von …`, direkt nach dem Anlegen des Sockets und vor `Setze sock auf …` aufrufen, sonst scheitert ein Neustart kurz nach Verbindungen an `bind`).
 - Tests: `./test.sh` (braucht `kddp` im `PATH`).
 
 Lizenz: MIT

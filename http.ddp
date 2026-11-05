@@ -11,6 +11,11 @@ ist in "netz.c" definiert
 und kann so benutzt werden:
 	"Bereite den HTTP-Dienst vor"
 
+Die öffentliche Funktion Http_Adresse_Wiederverwenden mit dem Parameter sock vom Typ Socket, gibt nichts zurück,
+ist in "netz.c" definiert
+und kann so benutzt werden:
+	"Erlaube die Wiederverwendung der Adresse von <sock>"
+
 Die öffentliche Funktion Http_Zeitlimit mit den Parametern sock und sekunden vom Typ Socket und Zahl, gibt nichts zurück,
 ist in "netz.c" definiert
 und kann so benutzt werden:
@@ -86,11 +91,11 @@ Und kann so benutzt werden:
 
 Die öffentliche Funktion Http_Kopfwert mit den Parametern a und name vom Typ Anfrage und Text, gibt einen Text zurück, macht:
 	Der Text gesucht ist name klein geschrieben.
-	Die Text Liste zeilen ist (kopf von a) an "\r\n" gespalten.
+	Die Text Liste zeilen ist (kopf von a) an '\n' gespalten.
 	Für jeden Text z in zeilen, mache:
 		Die Zahl d ist der Index von ':' in z.
 		Wenn d größer als 1 ist, dann:
-			Der Text n ist (z bis zum (d minus 1). Element) klein geschrieben.
+			Der Text n ist ((z bis zum (d minus 1). Element) getrimmt) klein geschrieben.
 			Wenn n gleich gesucht ist, dann:
 				Wenn d gleich die Länge von z ist, gib "" zurück.
 				Gib (z ab dem (d plus 1). Element) getrimmt zurück.

@@ -32,6 +32,10 @@ Die Anfrage b ist der zerlegte Kopf "KAPUTT".
 Prüfe "Anfragezeile kaputt 400" mit ((fehler von b) gleich 400 ist).
 Die Anfrage c ist der zerlegte Kopf "POST /status HTTP/1.1".
 Erwarte bei "ohne Kopfzeilen", dass (der Kopfwert "host" von c) gleich "" ist.
+Die Anfrage d ist der zerlegte Kopf "POST /status HTTP/1.1\r\nHost: x\r\nUser-Agent: curl\r\nAuthorization: Bearer abc\r\nContent-Type: application/json\r\nContent-Length: 5".
+Erwarte bei "Kopfwert Authorization mitten in 6 Zeilen", dass (der Kopfwert "authorization" von d) gleich "Bearer abc" ist.
+Erwarte bei "Kopfwert content-length letzte von 6 Zeilen", dass (der Kopfwert "content-length" von d) gleich "5" ist.
+Erwarte bei "Kopfwert User-Agent", dass (der Kopfwert "user-agent" von d) gleich "curl" ist.
 Der Text antwort ist die Antwort mit 200, "text/plain; charset=utf-8" und "ä".
 Prüfe "Statuszeile" mit ("HTTP/1.1 200 OK\r\n" am Anfang von antwort steht).
 Prüfe "Content-Length in Bytes" mit (antwort "Content-Length: 2\r\n" enthält).
