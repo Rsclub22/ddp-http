@@ -1,0 +1,173 @@
+[ ddp-http: kleines HTTP/1.1-Gerüst für DDP – Anfrage lesen, Antwort senden.
+  Eine Verbindung nach der anderen, jede Antwort mit Connection: close. MIT-Lizenz. ]
+Binde "Duden/Texte" ein.
+Binde "Duden/TextBauer" ein.
+Binde "Duden/Netzwerk" ein.
+Binde "Duden/Fehlerbehandlung" ein.
+Binde "Duden/C" ein.
+
+Die öffentliche Funktion Http_Vorbereiten gibt nichts zurück,
+ist in "netz.c" definiert
+und kann so benutzt werden:
+	"Bereite den HTTP-Dienst vor"
+
+Die öffentliche Funktion Http_Zeitlimit mit den Parametern sock und sekunden vom Typ Socket und Zahl, gibt nichts zurück,
+ist in "netz.c" definiert
+und kann so benutzt werden:
+	"Setze das Zeitlimit von <sock> auf <sekunden> Sekunden"
+
+Wir nennen die öffentliche Kombination aus
+	dem öffentlichen Text methode mit Standardwert "",
+	dem öffentlichen Text pfad mit Standardwert "",
+	dem öffentlichen Text kopf mit Standardwert "",
+	dem öffentlichen Text rumpf mit Standardwert "",
+	der öffentlichen Zahl fehler mit Standardwert 0,
+eine Anfrage, und erstellen sie so:
+	"eine neue Anfrage"
+
+Die Funktion Ist_Leerraum mit dem Parameter c vom Typ Buchstabe, gibt einen Wahrheitswert zurück, macht:
+	Gib wahr, wenn c gleich ' ' ist oder c gleich '\t' ist oder c gleich '\r' ist oder c gleich '\n' ist, zurück.
+Und kann so benutzt werden:
+	"<c> Leerraum ist"
+
+Die öffentliche Funktion Http_Trimme mit dem Parameter t vom Typ Text, gibt einen Text zurück, macht:
+	Die Zahl a ist 1.
+	Die Zahl b ist die Länge von t.
+	Solange a kleiner als, oder b ist und (t an der Stelle a) Leerraum ist, mache:
+		Erhöhe a um 1.
+	Solange b größer als, oder a ist und (t an der Stelle b) Leerraum ist, mache:
+		Verringere b um 1.
+	Wenn a größer als b ist, gib "" zurück.
+	Gib t im Bereich von a bis b zurück.
+Und kann so benutzt werden:
+	"<t> getrimmt"
+
+Die öffentliche Funktion Http_Ist_Ganzzahl mit dem Parameter t vom Typ Text, gibt einen Wahrheitswert zurück, macht:
+	Wenn die Länge von t gleich 0 ist, gib falsch zurück.
+	Für jeden Buchstaben c in t, mache:
+		Wenn (c als Zahl) kleiner als ('0' als Zahl) ist oder (c als Zahl) größer als ('9' als Zahl) ist, gib falsch zurück.
+	Gib wahr zurück.
+Und kann so benutzt werden:
+	"<t> ganzzahlig ist"
+
+Die Funktion Grund mit dem Parameter code vom Typ Zahl, gibt einen Text zurück, macht:
+	Wenn code gleich 200 ist, gib "OK" zurück.
+	Wenn code gleich 400 ist, gib "Bad Request" zurück.
+	Wenn code gleich 401 ist, gib "Unauthorized" zurück.
+	Wenn code gleich 404 ist, gib "Not Found" zurück.
+	Wenn code gleich 405 ist, gib "Method Not Allowed" zurück.
+	Wenn code gleich 408 ist, gib "Request Timeout" zurück.
+	Wenn code gleich 413 ist, gib "Payload Too Large" zurück.
+	Gib "Internal Server Error" zurück.
+Und kann so benutzt werden:
+	"der Grund zu <code>"
+
+Die öffentliche Funktion Http_Zerlege_Kopf mit dem Parameter roh vom Typ Text, gibt eine Anfrage zurück, macht:
+	Die Anfrage a ist eine neue Anfrage.
+	Die Zahl ende ist der Index von "\r\n" in roh.
+	Der Text erste ist roh.
+	Wenn ende größer als 0 ist, dann:
+		Speichere roh bis zum (ende minus 1). Element in erste.
+		Wenn ende plus 2 kleiner als, oder die Länge von roh ist, dann:
+			Speichere roh ab dem (ende plus 2). Element in kopf von a.
+	Die Text Liste wl ist erste an ' ' gespalten.
+	Wenn die Länge von wl ungleich 3 ist, dann:
+		Speichere 400 in fehler von a.
+		Gib a zurück.
+	Speichere (wl an der Stelle 1) in methode von a.
+	Der Text p ist wl an der Stelle 2.
+	Die Zahl q ist der Index von '?' in p.
+	Wenn q größer als 1 ist, Speichere p bis zum (q minus 1). Element in p.
+	Speichere p in pfad von a.
+	Wenn "HTTP/1." nicht am Anfang von (wl an der Stelle 3) steht, Speichere 400 in fehler von a.
+	Gib a zurück.
+Und kann so benutzt werden:
+	"der zerlegte Kopf <roh>"
+
+Die öffentliche Funktion Http_Kopfwert mit den Parametern a und name vom Typ Anfrage und Text, gibt einen Text zurück, macht:
+	Der Text gesucht ist name klein geschrieben.
+	Die Text Liste zeilen ist (kopf von a) an "\r\n" gespalten.
+	Für jeden Text z in zeilen, mache:
+		Die Zahl d ist der Index von ':' in z.
+		Wenn d größer als 1 ist, dann:
+			Der Text n ist (z bis zum (d minus 1). Element) klein geschrieben.
+			Wenn n gleich gesucht ist, dann:
+				Wenn d gleich die Länge von z ist, gib "" zurück.
+				Gib (z ab dem (d plus 1). Element) getrimmt zurück.
+	Gib "" zurück.
+Und kann so benutzt werden:
+	"der Kopfwert <name> von <a>"
+
+Die öffentliche Funktion Http_Antwort mit den Parametern code, typ und rumpf vom Typ Zahl, Text und Text, gibt einen Text zurück, macht:
+	Der TextBauer tb ist ein neuer TextBauer.
+	Der Text zeile ist "HTTP/1.1 " verkettet mit (code als Text) verkettet mit " " verkettet mit (der Grund zu code) verkettet mit "\r\n".
+	Füge zeile an tb an.
+	Der Text typzeile ist "Content-Type: " verkettet mit typ verkettet mit "\r\n".
+	Füge typzeile an tb an.
+	Der Text laenge ist "Content-Length: " verkettet mit ((die Byte Größe von rumpf) als Text) verkettet mit "\r\n".
+	Füge laenge an tb an.
+	Füge "Connection: close\r\nCache-Control: no-store\r\n\r\n" an tb an.
+	Füge rumpf an tb an.
+	Gib tb als Text zurück.
+Und kann so benutzt werden:
+	"die Antwort mit <code>, <typ> und <rumpf>"
+
+Die öffentliche Funktion Http_Sende mit den Parametern verbindung, code, typ und rumpf vom Typ Socket, Zahl, Text und Text, gibt nichts zurück, macht:
+	Der Text antwort ist die Antwort mit code, typ und rumpf.
+	Sende antwort über verbindung.
+	Lösche den letzten Fehler.
+Und kann so benutzt werden:
+	"Antworte über <verbindung> mit <code>, <typ> und <rumpf>"
+
+Die öffentliche Funktion Http_Lies_Anfrage mit den Parametern verbindung und max vom Typ Socket und Zahl, gibt eine Anfrage zurück, macht:
+	Die Byte Liste puffer ist eine leere Byte Liste.
+	Die Zahl kopfende ist -1.
+	Der Text bisher ist "".
+	Solange kopfende kleiner als 0 ist, mache:
+		Die Byte Liste stueck ist maximal 4096 Bytes aus verbindung.
+		Lösche den letzten Fehler.
+		Wenn die Länge von stueck gleich 0 ist, dann:
+			Die Anfrage abbruch ist eine neue Anfrage.
+			Speichere 408 in fehler von abbruch.
+			Gib abbruch zurück.
+		Speichere puffer verkettet mit stueck in puffer.
+		Wenn die Länge von puffer größer als max plus 8192 ist, dann:
+			Die Anfrage gross ist eine neue Anfrage.
+			Speichere 413 in fehler von gross.
+			Gib gross zurück.
+		Speichere die Bytes puffer als Text in bisher.
+		Speichere der Index von "\r\n\r\n" in bisher in kopfende.
+	Der Text kopftext ist bisher bis zum (kopfende minus 1). Element.
+	Die Anfrage a ist der zerlegte Kopf kopftext.
+	Wenn (fehler von a) ungleich 0 ist, gib a zurück.
+	Der Text cl ist der Kopfwert "content-length" von a.
+	Die Zahl soll ist 0.
+	Wenn cl nicht leer ist, dann:
+		Wenn (cl ganzzahlig ist) gleich falsch ist, dann:
+			Speichere 400 in fehler von a.
+			Gib a zurück.
+		Speichere cl als Zahl in soll.
+	Die Zahl kopfbytes ist (die Byte Größe von kopftext) plus 4.
+	Wenn soll größer als max ist, dann:
+		[ Rest wegwerfen (höchstens 64 KB), sonst verliert der Client die Antwort durch einen TCP-Reset ]
+		Die Zahl verworfen ist die Länge von puffer.
+		Solange verworfen kleiner als kopfbytes plus soll ist und verworfen kleiner als 65536 ist, mache:
+			Die Byte Liste weg ist maximal 4096 Bytes aus verbindung.
+			Lösche den letzten Fehler.
+			Wenn die Länge von weg gleich 0 ist, verlasse die Schleife.
+			Erhöhe verworfen um (die Länge von weg).
+		Speichere 413 in fehler von a.
+		Gib a zurück.
+	Solange die Länge von puffer kleiner als kopfbytes plus soll ist, mache:
+		Die Byte Liste mehr ist maximal 4096 Bytes aus verbindung.
+		Lösche den letzten Fehler.
+		Wenn die Länge von mehr gleich 0 ist, dann:
+			Speichere 408 in fehler von a.
+			Gib a zurück.
+		Speichere puffer verkettet mit mehr in puffer.
+	Wenn soll größer als 0 ist, dann:
+		Die Byte Liste rb ist puffer im Bereich von (kopfbytes plus 1) bis (kopfbytes plus soll).
+		Speichere die Bytes rb als Text in rumpf von a.
+	Gib a zurück.
+Und kann so benutzt werden:
+	"die Anfrage aus <verbindung> mit höchstens <max> Bytes"

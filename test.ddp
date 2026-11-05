@@ -1,0 +1,51 @@
+[ Unit-Tests für ddp-http. Aufruf: ./test.sh ]
+Binde "Duden/Ausgabe" ein.
+Binde "Duden/Laufzeit" ein.
+Binde "Duden/Texte" ein.
+Binde "http" ein.
+
+Die Zahl fehlschlaege ist 0.
+Die Funktion Pruefe mit den Parametern name und ok vom Typ Text und Wahrheitswert, gibt nichts zurück, macht:
+	Wenn ok, dann:
+		Schreibe ("OK:   " verkettet mit name) auf eine Zeile.
+	Sonst:
+		Erhöhe fehlschlaege um 1.
+		Schreibe ("FAIL: " verkettet mit name) auf eine Zeile.
+Und kann so benutzt werden:
+	"Prüfe <name> mit <ok>"
+Die Funktion Pruefe_Text mit den Parametern name, ist_wert und soll vom Typ Text, Text und Text, gibt nichts zurück, macht:
+	Wenn ist_wert gleich soll ist, dann:
+		Prüfe name mit wahr.
+	Sonst:
+		Prüfe (name verkettet mit " (ist \"" verkettet mit ist_wert verkettet mit "\", soll \"" verkettet mit soll verkettet mit "\")") mit falsch.
+Und kann so benutzt werden:
+	"Erwarte bei <name>, dass <ist_wert> gleich <soll> ist"
+
+Die Anfrage a ist der zerlegte Kopf "GET /raw?x=1 HTTP/1.1\r\nHost: status\r\nContent-Length: 12\r\nAuthorization: Bearer abc".
+Erwarte bei "Methode", dass (methode von a) gleich "GET" ist.
+Erwarte bei "Pfad ohne Query", dass (pfad von a) gleich "/raw" ist.
+Prüfe "kein Fehler" mit ((fehler von a) gleich 0 ist).
+Erwarte bei "Kopfwert klein", dass (der Kopfwert "content-length" von a) gleich "12" ist.
+Erwarte bei "Kopfwert Bearer", dass (der Kopfwert "AUTHORIZATION" von a) gleich "Bearer abc" ist.
+Erwarte bei "Kopfwert fehlt", dass (der Kopfwert "x-nix" von a) gleich "" ist.
+Die Anfrage b ist der zerlegte Kopf "KAPUTT".
+Prüfe "Anfragezeile kaputt 400" mit ((fehler von b) gleich 400 ist).
+Die Anfrage c ist der zerlegte Kopf "POST /status HTTP/1.1".
+Erwarte bei "ohne Kopfzeilen", dass (der Kopfwert "host" von c) gleich "" ist.
+Der Text antwort ist die Antwort mit 200, "text/plain; charset=utf-8" und "ä".
+Prüfe "Statuszeile" mit ("HTTP/1.1 200 OK\r\n" am Anfang von antwort steht).
+Prüfe "Content-Length in Bytes" mit (antwort "Content-Length: 2\r\n" enthält).
+Prüfe "Connection close" mit (antwort "Connection: close\r\n" enthält).
+Prüfe "Rumpf am Ende" mit ("\r\n\r\nä" am Ende von antwort steht).
+Der Text leer ist die Antwort mit 404, "text/plain; charset=utf-8" und "".
+Prüfe "404 Not Found" mit ("HTTP/1.1 404 Not Found\r\n" am Anfang von leer steht).
+Prüfe "leerer Rumpf Länge 0" mit (leer "Content-Length: 0\r\n" enthält).
+Erwarte bei "trimmen", dass (" \t x y \r\n" getrimmt) gleich "x y" ist.
+Prüfe "ganzzahlig" mit ("4096" ganzzahlig ist).
+Prüfe "nicht ganzzahlig 12abc" mit (("12abc" ganzzahlig ist) gleich falsch ist).
+Prüfe "nicht ganzzahlig leer" mit (("" ganzzahlig ist) gleich falsch ist).
+
+Wenn fehlschlaege größer als 0 ist, dann:
+	Schreibe ((fehlschlaege als Text) verkettet mit " FAIL") auf eine Zeile.
+	Beende das Programm mit Code 1.
+Schreibe "alle Tests OK" auf eine Zeile.
